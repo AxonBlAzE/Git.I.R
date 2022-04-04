@@ -133,6 +133,13 @@ async function askClone(){
     return answer.ask_clone;
 }
 
+async function Success(){
+    const msg = "Repository Created Successfully";
+    figlet(msg, function(err, data) {
+        console.log(gradient.rainbow.multiline(data));
+    });
+}
+
 async function createRepo(token, repo_name, repo_description, isPrivate){
     const clientWithAuth = new Octokit({
         auth: "token " + token
@@ -149,7 +156,9 @@ async function createRepo(token, repo_name, repo_description, isPrivate){
         spinner.stop();
         if (response.status === 201) {
             const clone_url = response.data.clone_url;
-            console.log(chalk.green(`Successfully created repository ${repo_name} at ${clone_url}`));
+            const msg = `Repository ${repo_name} created at ${clone_url}`;
+            await Success();
+            console.log(chalk.green(`🚀 Successfully created repository ${repo_name} at ${clone_url} 🚀`));
             return clone_url;
         } else {
             console.log(chalk.red(`Error creating repository ${repo_name}`));
@@ -172,14 +181,6 @@ async function main(){
     } 
     const ask_visibility = await askVisibility();
     const clone_url = createRepo(ask_token, ask_repo_name, ask_repo_description, ask_visibility);
-    // const ask_clone = await askClone();
-    // if (ask_clone === 'Yes'){
-    //     console.log(chalk.green(`Cloning repository ${ask_repo_name} at ${clone_url}`));
-    //     const spinner = createSpinner("Cloning Repository...").start();
-    //     await sleep(2000);
-    //     spinner.color = 'yellow';
-    //     spinner.stop();
-    // }
 }
 
 await main();
